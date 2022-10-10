@@ -60,7 +60,7 @@ func fourSum(nums []int, target int) [][]int {
 	len := len(nums)
 	result := make([][]int, 0)
 	for left := 0; left < len; left += 1 {
-		if nums[left] > target {
+		if nums[left] > target && nums[left] > 0 {
 			break
 		}
 
@@ -80,7 +80,8 @@ func fourSum(nums []int, target int) [][]int {
 				temp := nums[left] + nums[left2] + nums[right] + nums[right2]
 
 				if temp == target {
-					result = append(result, []int{nums[left], nums[left2], nums[right], nums[right2]})
+					x := []int{nums[left], nums[left2], nums[right], nums[right2]}
+					result = append(result, x)
 
 					for right < right2 && nums[right] == nums[right+1] {
 						right += 1
