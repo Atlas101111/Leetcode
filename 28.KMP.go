@@ -57,11 +57,10 @@ func strStr(haystack string, needle string) int {
 
 	j := -1
 	for i := 0; i < haystackLen; i += 1 {
-		if haystack[i] != needle[j+1] {
+		for j > 0 && haystack[i] != needle[j+1] {
 			j = lps[j]
-			continue
 		}
-		for haystack[i] == needle[j+1] {
+		if haystack[i] == needle[j+1] {
 			j += 1
 		}
 		if j == needleLen-1 {
@@ -76,6 +75,7 @@ func getLPS(pattern string) []int {
 	len := len(pattern)
 	result := make([]int, 10005, 10010)
 	front := -1
+	result[0] = front
 	for i := 1; i < len; i += 1 {
 		if pattern[i] == pattern[front+1] {
 			front += 1
