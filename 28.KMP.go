@@ -75,9 +75,21 @@ func getLPS(pattern string) []int {
 	len := len(pattern)
 	result := make([]int, 10005, 10010)
 	front := -1
+	// result数组是“最长相等前缀后缀数组”
+	// result[i]表示着，以pattern[i]为结尾的后缀，最长的相同的前缀的长度
+	// 比如对于pattern "abbcabb"，result数组为[-1, 0, 0, 0, 1, 2, 3]
+	// 比如我们截取子串: 'abbcab', result[5], 表示了如果以下标5为结尾，那么目前子串前缀后缀最长相等的长度为2，即"ab"
+	// 为啥非忒从减一开始呢？主要是出于使用上的考虑
 	result[0] = front
 	for i := 1; i < len; i += 1 {
+		// 双指针，front指向前缀，i遍历pattern串，相当于遍历后缀结尾
 		for front >= 0 && pattern[i] != pattern[front+1] {
+			// 这里为啥是这样回退呢？而且为啥是i和front+1比较，不是i和front？
+			// front目前由于是从-1开始的，指向的是并不是前缀的最后一个字符，而是倒数第二个，同时也是前缀的长度-1
+			// 如果当前前缀的最后一个字符和当前后缀的最后一个字符不匹配，那我们就要回退前缀
+			// 比如当前前缀为“aaab”，当前后缀为“aaac”，我们可以把前缀看作模式串，后缀看作待匹配串
+			// ‘b’和‘c’不匹配的时候，我们要回退模式串的下标
+			// 
 			front = result[front]
 		}
 
