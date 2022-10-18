@@ -97,7 +97,6 @@ func getLPS(pattern string) []int {
 			// 所以我们不需要把模式串回退到开头，既然都有重复出现的，那就先回退到重复出现的
 			// 所以front = result[2] = 1, 但我们是从-1开始，所以front下一步等于1-1=0
 			// 但是pattern[0+1]，也不等于c，所以再回退一把，front = result[0] = -1，这时候才是真正回退到了模式串开头
-			// 那么我们只要看看，模式串是不是还有前缀
 			front = result[front]
 		}
 
