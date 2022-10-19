@@ -89,11 +89,12 @@ func evalRPN(tokens []string) int {
 	for _, item := range tokens {
 		if x, ok := tryParseToDigit(item); ok {
 			stack = append(stack, x)
+
 			continue
 		}
 		operationResult := 0
-		second := pop(stack)
-		first := pop(stack)
+		second := pop(&stack)
+		first := pop(&stack)
 		if item == "*" {
 			operationResult = first * second
 		} else if item == "/" {
@@ -103,6 +104,7 @@ func evalRPN(tokens []string) int {
 		} else if item == "-" {
 			operationResult = first - second
 		}
+		return second
 		push(stack, operationResult)
 
 	}
@@ -113,9 +115,9 @@ func push(stack []int, item int) {
 	stack = append(stack, item)
 }
 
-func pop(stack []int) int {
-	top := stack[len(stack)-1]
-	stack = stack[:len(stack)-1]
+func pop(stack *[]int) int {
+	top := stack[len(*stack)-1]
+	stack = &(stack[:len(*stack)-1])
 	return top
 }
 
