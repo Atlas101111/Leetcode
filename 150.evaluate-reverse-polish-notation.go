@@ -85,15 +85,20 @@
 // @lc code=start
 func evalRPN(tokens []string) int {
 	stack := make([]int, 0)
-
 	for _, item := range tokens {
 		if x, ok := tryParseToDigit(item); ok {
 			stack = append(stack, x)
 			continue
 		}
 		operationResult := 0
-		second, stack := pop(stack)
-		first, stack := pop(stack)
+		second := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+
+		first := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		// second, stack := pop(stack)
+		// first, stack := pop(stack)
+
 		if item == "*" {
 			operationResult = first * second
 		} else if item == "/" {
@@ -103,30 +108,33 @@ func evalRPN(tokens []string) int {
 		} else if item == "-" {
 			operationResult = first - second
 		}
-		stack = push(stack, operationResult)
-
+		stack = append(stack, operationResult)
 	}
 	return stack[len(stack)-1]
 }
 
-func push(stack []int, item int) []int {
-	stack = append(stack, item)
-	return stack
-}
-
-func pop(stack []int) (int, []int) {
-	top := stack[len(stack)-1]
-	newStack := stack[:len(stack)-1]
-	return top, newStack
-}
+// func pop(stack []int) (int, []int) {
+// 	top := stack[len(stack)-1]
+// 	return top, stack[:len(stack)-1]
+// }
 
 func tryParseToDigit(input string) (int, bool) {
-	result := -1
+	result := 0
 	ok := false
 	parse := int(input[0] - '0')
-	if parse >= 0 && parse < 10 {
-		result = parse
+	if parse >= 0 && parse < 10 || (input[0] == '-' && len(input) > 1) {
 		ok = true
+		for index, item := range input {
+			if item == '-' {
+				continue
+			}
+
+			result = result * 10
+			result += int(input[index] - '0')
+		}
+	}
+	if input[0] == '-' {
+		result = result * -1
 	}
 	return result, ok
 }
