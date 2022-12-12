@@ -56,7 +56,11 @@
  */
 
 // @lc code=start
-package leetcode
+// package leetcode
+
+import (
+	"container/heap"
+)
 
 type Node struct {
 	Word      string
@@ -70,14 +74,18 @@ func (h NodeHeap) Len() int {
 }
 
 func (h NodeHeap) Less(i, j int) bool {
-	return h[i].Frequency > h[j].Frequency
+	if h[i].Frequency == h[j].Frequency {
+		return h[i].Word > h[j].Word
+	}
+	// 小顶堆
+	return h[i].Frequency < h[j].Frequency
 }
 
 func (h NodeHeap) Swap(i, j int) {
 	h[i], h[j] = h[j], h[i]
 }
 
-func (h *NodeHeap) Pop() *Node {
+func (h *NodeHeap) Pop() interface{} {
 	old := *h
 	oldLen := len(old)
 	result := old[oldLen-1]
@@ -85,12 +93,52 @@ func (h *NodeHeap) Pop() *Node {
 	return result
 }
 
-func (h *NodeHeap) Push(node *Node) {
-	*h = append(*h, node)
+func (h *NodeHeap) Push(node interface{}) {
+	*h = append(*h, node.(*Node))
 }
 
 func topKFrequent(words []string, k int) []string {
+	dict := make(map[string]*Node)
+	// On统计单词的频率
+	for _, word := range words {
+		if val, ok := dict[word]; !ok {
+			newNode := &Node{
+				Word:      word,
+				Frequency: 1,
+			}
+			dict[word] = newNode
+		} else {
+			val.Frequency += 1
+		}
+	}
 
+	var (
+		myHeap = NodeHeap{}
+		result = make([]string, k)
+	)
+	heap.Init(&myHeap)
+
+	// 用堆的主要点在这里，维护一个大小为k的小顶堆，将元素按照任意顺序插入堆中
+	// 每当堆的大小超过k，就弹出堆顶，即目前最小的元素
+	// 插入完成后，剩下的k个元素即为TopK元素
+	for _, value := range dict {
+		// 这里有一个点，就是一定要用heap.Push,不能用myHeap.Push，要不然就不会走树的修正流程
+		heap.Push(&myHeap, value)
+		if len(myHeap) > k {
+			heap.Pop(&myHeap)
+		}
+	}
+	// for _, node := range myHeap {
+	// 	fmt.Printf("word: %s, frq: %v\n", node.Word, node.Frequency)
+	// }
+
+	// 必须按照Pop的顺序，逆序输出，才是从大到小的顺序
+	for x := 0; x < k; x += 1 {
+		node := heap.Pop(&myHeap)
+		result[k-1-x] = node.(*Node).Word
+	}
+
+	return result
 }
 
 // @lc code=end
