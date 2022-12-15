@@ -74,7 +74,7 @@
 // 	return root
 // }
 
-// 迭代写法,统一写法
+// 迭代写法,统一写法,前序遍历
 func invertTree(root *TreeNode) *TreeNode {
 	var (
 		stack = make([]*TreeNode, 0)
@@ -97,6 +97,10 @@ func invertTree(root *TreeNode) *TreeNode {
 			}
 			stack = append(stack, ptr)
 			stack = append(stack, nil)
+			// 为啥每次都是在中节点后面插入一个nil呢？是因为我们事实上是在用nil标记我们走过的路径，中节点是我们肯定踏足过的节点，所以要加标记
+
+			// 这样做的原因是，在后序遍历和中序遍历的时候，当我们访问到某个中节点A，并不代表我们要立刻输出A的值或者对A节点做处理，有可能只是路过，
+			// 并不需要A节点的值，只是为了获取节点A的左右子节点而已，按照遍历顺序还轮不到A，所以用nil来标记路过但没访问过值的节点
 
 		} else {
 			ptr = stack[len(stack)-1]
