@@ -55,34 +55,69 @@
  *     Right *TreeNode
  * }
  */
+
+// 迭代法
+// func minDepth(root *TreeNode) int {
+// 	if root == nil {
+// 		return 0
+// 	}
+// 	queue := make([]*TreeNode, 0)
+// 	queue = append(queue, root)
+// 	dep := 0
+// 	for len(queue) > 0 {
+// 		l := len(queue)
+// 		dep += 1
+
+// 		for x := 0; x < l; x += 1 {
+// 			front := queue[0]
+// 			queue = queue[1:]
+// 			if front.Left == nil && front.Right == nil {
+// 				return dep
+// 			}
+
+// 			if front.Left != nil {
+// 				queue = append(queue, front.Left)
+// 			}
+// 			if front.Right != nil {
+// 				queue = append(queue, front.Right)
+// 			}
+// 		}
+
+// 	}
+// 	return dep
+// }
+
+// 递归法
 func minDepth(root *TreeNode) int {
+
 	if root == nil {
 		return 0
 	}
-	queue := make([]*TreeNode, 0)
-	queue = append(queue, root)
-	dep := 0
-	for len(queue) > 0 {
-		l := len(queue)
-		dep += 1
 
-		for x := 0; x < l; x += 1 {
-			front := queue[0]
-			queue = queue[1:]
-			if front.Left == nil && front.Right == nil {
-				return dep
-			}
-
-			if front.Left != nil {
-				queue = append(queue, front.Left)
-			}
-			if front.Right != nil {
-				queue = append(queue, front.Right)
-			}
-		}
-
+	if root.Left == nil && root.Right == nil {
+		return 1
 	}
-	return dep
+
+	leftHeight := -1
+	if root.Left != nil {
+		leftHeight = minDepth(root.Left)
+	}
+
+	rightHeight := -1
+	if root.Right != nil {
+		rightHeight = minDepth(root.Right)
+	}
+
+	if leftHeight == -1 {
+		return 1 + rightHeight
+	} else if rightHeight == -1 {
+		return 1 + leftHeight
+	} else if leftHeight > rightHeight {
+		return 1 + rightHeight
+	} else {
+		return 1 + leftHeight
+	}
+
 }
 
 // @lc code=end
