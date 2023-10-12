@@ -61,7 +61,7 @@ func longestPalindrome(s string) string {
 				continue
 			}
 			if length == 2 {
-				if s[j] == s[i] {
+				if s[i] == s[j] {
 					dp[i][j] = true
 					if len(result) < length {
 						result = s[i : j+1]
