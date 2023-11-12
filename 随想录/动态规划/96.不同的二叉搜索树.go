@@ -43,14 +43,16 @@
 
 // @lc code=start
 func numTrees(n int) int {
-	dp := make([]int, n+1)
+	dp := make([]int, n+3)
+	dp[0] = 1
 	dp[1] = 1
 	dp[2] = 2
+	if n <= 2 {
+		return dp[n]
+	}
 	for i := 3; i <= n; i++ {
-		if i%2 == 1 {
-			dp[i] = (i-1)*dp[i-1] + 1
-		} else {
-			dp[i] = i * dp[i-1]
+		for j := 1; j <= i; j++ {
+			dp[i] += dp[j-1] * dp[i-j]
 		}
 	}
 	return dp[n]
